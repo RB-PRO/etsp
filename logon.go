@@ -3,9 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -14,22 +12,21 @@ type User struct {
 	Password string `json:"Password"`
 }
 
-func Logon(userLogin User) string {
+func Logon(userLogin User) (string, error) {
 
 	bytesRepresentation, err := json.Marshal(userLogin)
 	if err != nil {
-		log.Fatalln(err)
+		return "", err
 	}
 
 	resp, err := http.Post("https://ws.etsp.ru/v2/json/Security.svc/Logon", "application/json", bytes.NewBuffer(bytesRepresentation))
 	if err != nil {
-		log.Fatalln(err)
+		return "", err
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println(err)
-		return ""
+		return "", err
 	}
-	return string(body)
+	return string(body), nil
 }

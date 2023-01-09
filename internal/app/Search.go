@@ -9,7 +9,7 @@ import (
 func Run() {
 
 	user := etsp.User{
-		Login:    "ya.del@andex.ru_IP",
+		Login:    "ya.detal@yandex.ru_IP",
 		Password: "12345W",
 	}
 

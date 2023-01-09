@@ -1,6 +1,6 @@
 package main
 
-import "github.com/rb-pro/etsp/internal/app"
+import "github.com/RB-PRO/etsp/internal/app"
 
 func main() {
 	app.Run()

@@ -1,9 +1,11 @@
 package app
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
+	"time"
 
 	"github.com/RB-PRO/etsp/pkg/etsp"
 )
@@ -30,13 +32,33 @@ func Run() {
 	if errorAuf != nil {
 		log.Fatal(errorAuf)
 	}
+	time.Sleep(100 * time.Microsecond)
+
+	// ************************************************
+
+	// Простой поиск
+	SearchBasicRes, SearchBasicError := user.SearchBasic("1261-2919010")
+	if SearchBasicError != nil {
+		log.Fatal(SearchBasicError)
+	}
+	time.Sleep(100 * time.Microsecond)
+
+	fmt.Println("code:", SearchBasicRes.Data.Items[0].Code)
+
+	// Поиск по коду товара
+	PartAttendantByCodeRes, PartAttendantByCodeError := user.PartAttendantByCode(SearchBasicRes.Data.Items[0].Code)
+	if PartAttendantByCodeError != nil {
+		log.Fatal(PartAttendantByCodeError)
+	}
+	fmt.Println(PartAttendantByCodeRes)
+
+	// ************************************************
 
 	// Деавторизация
 	_, errorLogout := user.Logout()
 	if errorLogout != nil {
 		log.Fatal(errorLogout)
 	}
-
 }
 
 // Получение значение из файла

@@ -8,12 +8,14 @@ import (
 	"net/http"
 )
 
-// Структура ответа на авторизацию
+// Структура ответа на авторизацию [Logon]
+//
+// [Logon]: https://ws.etsp.ru/Help/v2/Security/Logon.aspx
 type LogonResponse struct {
-	Errors   string `json:"Errors"`
-	Success  bool   `json:"Success"`
-	Warnings string `json:"Warnings"`
-	Data     string `json:"Data"`
+	Errors   []string `json:"Errors"`
+	Success  bool     `json:"Success"`
+	Warnings []string `json:"Warnings"`
+	Data     string   `json:"Data"`
 }
 
 func (user *User) Logon() (LogonResponse, error) {
@@ -44,7 +46,7 @@ func (user *User) Logon() (LogonResponse, error) {
 
 	// Проверка на отсутствие авторизации
 	if !LogonRes.Success {
-		return LogonResponse{}, errors.New(LogonRes.Errors)
+		return LogonResponse{}, errors.New(LogonRes.Errors[0])
 	}
 
 	// Заполнение HashSession

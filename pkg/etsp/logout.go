@@ -13,11 +13,13 @@ type logoutRequest struct {
 	HashSession string `json:"HashSession"` //Хэш-ключ сессии
 }
 
-// Структура ответа на деавторизацию
+// Структура ответа на авторизацию [Logout]
+//
+// [Logout]: https://ws.etsp.ru/Help/v2/Security/Logout.aspx
 type LogoutResponse struct {
-	Errors   string `json:"Errors"`
-	Success  bool   `json:"Success"`
-	Warnings string `json:"Warnings"`
+	Errors   []string `json:"Errors"`
+	Success  bool     `json:"Success"`
+	Warnings []string `json:"Warnings"`
 }
 
 func (user User) Logout() (LogoutResponse, error) {
@@ -48,7 +50,7 @@ func (user User) Logout() (LogoutResponse, error) {
 
 	// Проверка на отсутствие авторизации
 	if !LogoutRes.Success {
-		return LogoutResponse{}, errors.New(LogoutRes.Errors)
+		return LogoutResponse{}, errors.New(LogoutRes.Errors[0])
 	}
 
 	return LogoutRes, nil

@@ -3,35 +3,37 @@ package etsp
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 )
 
+// Структура ответа на авторизацию
 type LogonResponse struct {
-	Errors   stringOrNull `json:"Errors"`
-	Success  bool         `json:"Success"`
-	Warnings stringOrNull `json:"Warnings"`
-	Data     stringOrNull `json:"Data"`
+	Errors   string `json:"Errors"`
+	Success  bool   `json:"Success"`
+	Warnings string `json:"Warnings"`
+	Data     string `json:"Data"`
 }
 
-func (user User) Logon() (LogonResponse, error) {
+func (user *User) Logon() (LogonResponse, error) {
+	// Запаковать в json
 	bytesRepresentation, err := json.Marshal(user)
 	if err != nil {
 		return LogonResponse{}, err
 	}
 
+	// Выполнить запрос
 	resp, err := http.Post(URL+"/v2/json/Security.svc/Logon", "application/json", bytes.NewBuffer(bytesRepresentation))
 	if err != nil {
 		return LogonResponse{}, err
 	}
 
+	// Преобразовать данные в массив byte
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return LogonResponse{}, err
 	}
-
-	fmt.Println(string(body))
 
 	// Распарсить данные
 	var LogonRes LogonResponse
@@ -39,6 +41,14 @@ func (user User) Logon() (LogonResponse, error) {
 	if responseErrorUnmarshal != nil {
 		return LogonResponse{}, responseErrorUnmarshal
 	}
+
+	// Проверка на отсутствие авторизации
+	if !LogonRes.Success {
+		return LogonResponse{}, errors.New(LogonRes.Errors)
+	}
+
+	// Заполнение HashSession
+	user.HashSession = LogonRes.Data
 
 	return LogonRes, nil
 }

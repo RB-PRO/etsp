@@ -11,6 +11,12 @@ import (
 )
 
 func Run() {
+	fileOut, errorMakeXlsx := makeWorkBook()
+	if errorMakeXlsx != nil {
+		log.Fatal(errorMakeXlsx)
+	}
+	writeHead(fileOut, "main")
+
 	// Получение логина и пароля из файлов
 	login, ErrorFile := dataFile("Login")
 	if ErrorFile != nil {
@@ -46,11 +52,11 @@ func Run() {
 	fmt.Println("code:", SearchBasicRes.Data.Items[0].Code)
 
 	// Поиск по коду товара
-	PartAttendantByCodeRes, PartAttendantByCodeError := user.PartAttendantByCode(SearchBasicRes.Data.Items[0].Code)
-	if PartAttendantByCodeError != nil {
-		log.Fatal(PartAttendantByCodeError)
+	GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(SearchBasicRes.Data.Items[0].Code) //SearchBasicRes.Data.Items[0].Code)
+	if GetPartsRemainsByCodeError != nil {
+		log.Fatal(GetPartsRemainsByCodeError)
 	}
-	fmt.Println(PartAttendantByCodeRes)
+	fmt.Println(GetPartsRemainsByCodeRes.Data.Remains[0].StorageName)
 
 	// ************************************************
 
@@ -58,6 +64,12 @@ func Run() {
 	_, errorLogout := user.Logout()
 	if errorLogout != nil {
 		log.Fatal(errorLogout)
+	}
+
+	// ************************************************ EXCEL SAVE ************************************************
+	fileCloseError := closeXlsx(fileOut)
+	if fileCloseError != nil {
+		log.Fatal(fileCloseError)
 	}
 }
 

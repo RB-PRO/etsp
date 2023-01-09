@@ -10,21 +10,31 @@ import (
 	"github.com/RB-PRO/etsp/pkg/etsp"
 )
 
-func Run() {
-	fileOut, errorMakeXlsx := makeWorkBook()
-	if errorMakeXlsx != nil {
-		log.Fatal(errorMakeXlsx)
+func RunForArray() {
+	SearchArray := make([]string, 2)
+	SearchArray[0] = "1261-2919010"
+	SearchArray[1] = "1262-2919010"
+	errorSearch := Run(SearchArray)
+	if errorSearch != nil {
+		log.Fatal(errorSearch)
 	}
-	writeHead(fileOut, "main")
+}
+
+func Run(SearchArray []string) error {
+	fileOut, errorMakeXlsx := etsp.MakeWorkBook()
+	if errorMakeXlsx != nil {
+		return errorMakeXlsx
+	}
+	etsp.WriteHead(fileOut, "main")
 
 	// Получение логина и пароля из файлов
 	login, ErrorFile := dataFile("Login")
 	if ErrorFile != nil {
-		log.Fatal(ErrorFile)
+		return ErrorFile
 	}
 	password, ErrorFile := dataFile("Password")
 	if ErrorFile != nil {
-		log.Fatal(ErrorFile)
+		return ErrorFile
 	}
 
 	// Объявление пользователя
@@ -36,41 +46,64 @@ func Run() {
 	// Авторизация
 	_, errorAuf := user.Logon()
 	if errorAuf != nil {
-		log.Fatal(errorAuf)
+		return errorAuf
 	}
 	time.Sleep(100 * time.Microsecond)
 
 	// ************************************************
+	var count int = 2
 
-	// Простой поиск
-	SearchBasicRes, SearchBasicError := user.SearchBasic("1261-2919010")
-	if SearchBasicError != nil {
-		log.Fatal(SearchBasicError)
+	// Проходим по исходному массиву
+	for _, SearchArrayVal := range SearchArray {
+		// Простой поиск
+		SearchBasicRes, SearchBasicError := user.SearchBasic(SearchArrayVal)
+		if SearchBasicError != nil {
+			return SearchBasicError
+		}
+		time.Sleep(100 * time.Microsecond)
+
+		if len(SearchBasicRes.Data.Items) != 0 {
+			for indexSearchBasic, valueSearchBasic := range SearchBasicRes.Data.Items {
+				fmt.Println("Code:", valueSearchBasic.Code)
+
+				// Поиск по коду товара
+				GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(valueSearchBasic.Code) //SearchBasicRes.Data.Items[0].Code)
+				if GetPartsRemainsByCodeError != nil {
+					return GetPartsRemainsByCodeError
+				}
+
+				if len(GetPartsRemainsByCodeRes.Data.Remains) != 0 {
+					for indexGetPartsRemainsByCode, valueGetPartsRemainsByCode := range GetPartsRemainsByCodeRes.Data.Remains {
+
+						// проверка на Хабаровск
+						if valueGetPartsRemainsByCode.StorageName == "Хабаровск" {
+
+							etsp.WriteOneLine(fileOut, "main", count, SearchBasicRes, indexSearchBasic, GetPartsRemainsByCodeRes, indexGetPartsRemainsByCode)
+
+							count++
+
+						}
+					}
+				}
+				//fmt.Println(GetPartsRemainsByCodeRes.Data.Remains[0].StorageName)
+				time.Sleep(100 * time.Microsecond)
+			}
+		}
 	}
-	time.Sleep(100 * time.Microsecond)
-
-	fmt.Println("code:", SearchBasicRes.Data.Items[0].Code)
-
-	// Поиск по коду товара
-	GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(SearchBasicRes.Data.Items[0].Code) //SearchBasicRes.Data.Items[0].Code)
-	if GetPartsRemainsByCodeError != nil {
-		log.Fatal(GetPartsRemainsByCodeError)
-	}
-	fmt.Println(GetPartsRemainsByCodeRes.Data.Remains[0].StorageName)
-
 	// ************************************************
 
 	// Деавторизация
 	_, errorLogout := user.Logout()
 	if errorLogout != nil {
-		log.Fatal(errorLogout)
+		return errorLogout
 	}
 
 	// ************************************************ EXCEL SAVE ************************************************
-	fileCloseError := closeXlsx(fileOut)
+	fileCloseError := etsp.CloseXlsx(fileOut)
 	if fileCloseError != nil {
-		log.Fatal(fileCloseError)
+		return fileCloseError
 	}
+	return nil
 }
 
 // Получение значение из файла

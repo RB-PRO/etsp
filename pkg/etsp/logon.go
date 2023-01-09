@@ -1,8 +1,9 @@
-package main
+package etsp
 
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -18,6 +19,8 @@ func Logon(userLogin User) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	fmt.Println("Request:", string(bytesRepresentation))
 
 	resp, err := http.Post("https://ws.etsp.ru/v2/json/Security.svc/Logon", "application/json", bytes.NewBuffer(bytesRepresentation))
 	if err != nil {

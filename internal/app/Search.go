@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -64,7 +63,7 @@ func Run(SearchArray []string) error {
 
 		if len(SearchBasicRes.Data.Items) != 0 {
 			for indexSearchBasic, valueSearchBasic := range SearchBasicRes.Data.Items {
-				fmt.Println("Code:", valueSearchBasic.Code)
+				log.Println("Code:", valueSearchBasic.Code)
 
 				// Поиск по коду товара
 				GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(valueSearchBasic.Code) //SearchBasicRes.Data.Items[0].Code)
@@ -75,11 +74,9 @@ func Run(SearchArray []string) error {
 				if len(GetPartsRemainsByCodeRes.Data.Remains) != 0 {
 					for indexGetPartsRemainsByCode, valueGetPartsRemainsByCode := range GetPartsRemainsByCodeRes.Data.Remains {
 
-						// проверка на Хабаровск
-						if valueGetPartsRemainsByCode.StorageName == "Хабаровск" {
+						if valueGetPartsRemainsByCode.StorageName == "Хабаровск" { // проверка на Хабаровск
 
 							etsp.WriteOneLine(fileOut, "main", count, SearchBasicRes, indexSearchBasic, GetPartsRemainsByCodeRes, indexGetPartsRemainsByCode)
-
 							count++
 
 						}
@@ -100,6 +97,7 @@ func Run(SearchArray []string) error {
 
 	// ************************************************ EXCEL SAVE ************************************************
 	fileCloseError := etsp.CloseXlsx(fileOut)
+	//etsp.Filter(fileOut, "main")
 	if fileCloseError != nil {
 		return fileCloseError
 	}

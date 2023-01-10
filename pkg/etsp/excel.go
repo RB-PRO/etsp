@@ -28,6 +28,12 @@ func CloseXlsx(f *excelize.File) error {
 	return nil
 }
 
+func Filter(f *excelize.File, ssheet string) {
+	f.AutoFilter(ssheet, "A1:D4", &excelize.AutoFilterOptions{
+		Column: "B", Expression: "x != blanks",
+	})
+}
+
 func WriteOneLine(f *excelize.File, ssheet string, row int, SearchBasicRes SearchBasicResponse, SearchBasicIndex int, GetPartsRemainsByCodeRes GetPartsRemainsByCodeResponse, GetPartsRemainsByCodeIndex int) {
 	// SearchBasic
 	writeHeadOne(f, ssheet, 1, row, SearchBasicRes.Data.Items[SearchBasicIndex].Code, "")

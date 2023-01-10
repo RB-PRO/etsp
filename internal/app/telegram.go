@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -36,6 +37,7 @@ func StartBot() {
 			errorSearch := Run(str)
 			if errorSearch != nil {
 				//log.Fatal(errorSearch)
+				fmt.Println(errorSearch, update.Message.Chat.UserName)
 				bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Ошибка. Повторите запрос."))
 			} else {
 

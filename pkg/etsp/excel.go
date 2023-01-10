@@ -83,21 +83,21 @@ func existBool(boolean bool) string {
 }
 func WriteHead(f *excelize.File, ssheet string) {
 	// SearchBasic
-	writeHeadOne(f, ssheet, 1, 1, "Code", "Код детали (используется для показа остатков на складах/магазинах, , в GetPartsRemainsByCode2 и других методах PartsRemains)")
-	writeHeadOne(f, ssheet, 2, 1, "Name", "Название детали;")
-	writeHeadOne(f, ssheet, 3, 1, "Note", "Описание детали;")
+	writeHeadOne(f, ssheet, 1, 1, "Code", "Код детали (используется для показа остатков на складах/магазинах, в GetPartsRemainsByCode2 и других методах PartsRemains)")
+	writeHeadOne(f, ssheet, 2, 1, "Name", "Название детали")
+	writeHeadOne(f, ssheet, 3, 1, "Note", "Описание детали")
 	writeHeadOne(f, ssheet, 4, 1, "UniqueNumber", "Уникальный номер;")
-	writeHeadOne(f, ssheet, 5, 1, "OmegaNumber", "Код омеги (только по отдельному доступу*);")
-	writeHeadOne(f, ssheet, 6, 1, "SkubaNumber", "Код скубы (только по отдельному доступу*);")
-	writeHeadOne(f, ssheet, 7, 1, "Group", "Группа (применяемость);")
-	writeHeadOne(f, ssheet, 8, 1, "Subgroup", "Подгруппа (код подгруппы);")
-	writeHeadOne(f, ssheet, 9, 1, "CodeImagePart", "Код изображения детали (используется для получения изображения детали);")
-	writeHeadOne(f, ssheet, 10, 1, "HasPartAttendant", "Наличие сопутствующих деталией (признак используется для вызова списка сопустствующих деталей);")
-	writeHeadOne(f, ssheet, 11, 1, "IsSklad", "Наличие на складе (True - имеется);")
-	writeHeadOne(f, ssheet, 12, 1, "IsShops", "Наличие в розничной сети (True - имеется);")
-	writeHeadOne(f, ssheet, 13, 1, "IsShipment", "Наличие в пути (True - имеется);")
-	writeHeadOne(f, ssheet, 14, 1, "IsOutside", "Наличие на внешних складах (True - имеется);")
-	writeHeadOne(f, ssheet, 15, 1, "ClientArticle", "Артикул клиента (только по отдельному доступу*);")
+	writeHeadOne(f, ssheet, 5, 1, "OmegaNumber", "Код омеги (только по отдельному доступу)")
+	writeHeadOne(f, ssheet, 6, 1, "SkubaNumber", "Код скубы (только по отдельному доступу)")
+	writeHeadOne(f, ssheet, 7, 1, "Group", "Группа (применяемость)")
+	writeHeadOne(f, ssheet, 8, 1, "Subgroup", "Подгруппа (код подгруппы)")
+	writeHeadOne(f, ssheet, 9, 1, "CodeImagePart", "Код изображения детали (используется для получения изображения детали)")
+	writeHeadOne(f, ssheet, 10, 1, "HasPartAttendant", "Наличие сопутствующих деталией (признак используется для вызова списка сопустствующих деталей)")
+	writeHeadOne(f, ssheet, 11, 1, "IsSklad", "Наличие на складе (True - имеется)")
+	writeHeadOne(f, ssheet, 12, 1, "IsShops", "Наличие в розничной сети (True - имеется)")
+	writeHeadOne(f, ssheet, 13, 1, "IsShipment", "Наличие в пути (True - имеется)")
+	writeHeadOne(f, ssheet, 14, 1, "IsOutside", "Наличие на внешних складах (True - имеется)")
+	writeHeadOne(f, ssheet, 15, 1, "ClientArticle", "Артикул клиента (только по отдельному доступу)")
 	writeHeadOne(f, ssheet, 16, 1, "IsAnalog", "Признак аналога (True - аналог).")
 	// GetPartsRemainsByCode
 	writeHeadOne(f, ssheet, 17, 1, "ApproximateIncomeDateInFreeStatus", "Ориентировочная дата поступления товара в свободный остаток.")
@@ -109,20 +109,21 @@ func WriteHead(f *excelize.File, ssheet string) {
 	writeHeadOne(f, ssheet, 23, 1, "IsSubstandard", "Признак некондиции (True - некондиция)")
 	writeHeadOne(f, ssheet, 24, 1, "ManufacturerName", "Производитель")
 	writeHeadOne(f, ssheet, 25, 1, "Price", "Цена клиента")
-	writeHeadOne(f, ssheet, 26, 1, "Quantity", "Кол-во товара в виде строки**")
-	writeHeadOne(f, ssheet, 27, 1, "QuantityValue", "Кол-во товара в виде числа**")
+	writeHeadOne(f, ssheet, 26, 1, "Quantity", "Кол-во товара в виде строки")
+	writeHeadOne(f, ssheet, 27, 1, "QuantityValue", "Кол-во товара в виде числа")
 	writeHeadOne(f, ssheet, 28, 1, "QuantityWithRestrictions", "Признак ограниченного доступа к просмотру количества. Если доступ ограничен, то товар больше 8 показывается как >8")
 	writeHeadOne(f, ssheet, 29, 1, "RemainsStatusID", "Идентификатор статуса товара")
 	writeHeadOne(f, ssheet, 30, 1, "RemainsStatusName", "Статус товара (свободный остаток, оформление, в пути и др.)")
 	writeHeadOne(f, ssheet, 31, 1, "StorageID", "Идентификатор склада")
 	writeHeadOne(f, ssheet, 32, 1, "StorageName", "Название склада")
 	writeHeadOne(f, ssheet, 33, 1, "StoragePosition", "Позиция склада (для сортировки)")
-	writeHeadOne(f, ssheet, 33, 1, "Weight", "Вес (кг.)")
+	writeHeadOne(f, ssheet, 34, 1, "Weight", "Вес (кг)")
 }
 
 func writeHeadOne(f *excelize.File, ssheet string, col int, row int, val string, comment string) {
 	collumn, _ := excelize.ColumnNumberToName(col)
 	f.SetCellValue(ssheet, collumn+strconv.Itoa(row), val)
+
 	if comment != "" {
 		f.AddComment(ssheet, excelize.Comment{
 			Cell:   collumn + strconv.Itoa(row),
@@ -133,4 +134,5 @@ func writeHeadOne(f *excelize.File, ssheet string, col int, row int, val string,
 			},
 		})
 	}
+
 }

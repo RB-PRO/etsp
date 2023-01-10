@@ -19,9 +19,9 @@ type searchBasicRequest struct {
 //
 // [SearchBasic]: https://ws.etsp.ru/Help/v2/Search/SearchBasic.aspx
 type SearchBasicResponse struct {
-	Errors   string `json:"Errors"`
-	Success  bool   `json:"Success"`
-	Warnings string `json:"Warnings"`
+	Errors   []string `json:"Errors"`
+	Success  bool     `json:"Success"`
+	Warnings []string `json:"Warnings"`
 	Data     struct {
 		Items []struct {
 			Code             string `json:"Code"`             // Код детали (используется для показа остатков на складах/магазинах, , в GetPartsRemainsByCode2 и других методах PartsRemains);
@@ -77,7 +77,7 @@ func (user User) SearchBasic(text string) (SearchBasicResponse, error) {
 
 	// Проверка на отсутствие данных
 	if !SearchBasicRes.Success {
-		return SearchBasicResponse{}, errors.New(SearchBasicRes.Errors)
+		return SearchBasicResponse{}, errors.New(SearchBasicRes.Errors[0])
 	}
 
 	return SearchBasicRes, nil

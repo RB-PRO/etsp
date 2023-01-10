@@ -82,7 +82,7 @@ func Run(SearchArray []string) error {
 						}
 					}
 				}
-				//fmt.Println(GetPartsRemainsByCodeRes.Data.Remains[0].StorageName)
+
 				time.Sleep(100 * time.Microsecond)
 			}
 		}

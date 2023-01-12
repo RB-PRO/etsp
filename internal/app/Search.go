@@ -24,7 +24,7 @@ func Run(SearchArray []string) error {
 	if errorMakeXlsx != nil {
 		return errorMakeXlsx
 	}
-	etsp.WriteHead(fileOut, "main")
+	etsp.WriteHeadCustom(fileOut, "main")
 
 	// Получение логина и пароля из файлов
 	login, ErrorFile := dataFile("Login")
@@ -76,14 +76,14 @@ func Run(SearchArray []string) error {
 
 						if valueGetPartsRemainsByCode.StorageName == "Хабаровск" { // проверка на Хабаровск
 
-							etsp.WriteOneLine(fileOut, "main", count, SearchBasicRes, indexSearchBasic, GetPartsRemainsByCodeRes, indexGetPartsRemainsByCode)
+							etsp.WriteOneLineCustom(fileOut, "main", count, SearchBasicRes, indexSearchBasic, GetPartsRemainsByCodeRes, indexGetPartsRemainsByCode)
 							count++
 
 						}
 					}
 				}
 
-				time.Sleep(100 * time.Microsecond)
+				time.Sleep(50 * time.Microsecond)
 			}
 		}
 	}

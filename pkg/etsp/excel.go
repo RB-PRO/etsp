@@ -120,7 +120,7 @@ func WriteHead(f *excelize.File, ssheet string) {
 	writeHeadOne(f, ssheet, 34, 1, "Weight", "Вес (кг)")
 }
 
-func writeHeadOne(f *excelize.File, ssheet string, col int, row int, val string, comment string) {
+func writeHeadOne(f *excelize.File, ssheet string, col int, row int, val interface{}, comment string) {
 	collumn, _ := excelize.ColumnNumberToName(col)
 	f.SetCellValue(ssheet, collumn+strconv.Itoa(row), val)
 

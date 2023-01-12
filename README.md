@@ -16,7 +16,7 @@
 
 ### *internal*
 
-Данная директория отвечает за сам [поиск товаров](https://github.com/github/RB-PRO/etsp/internal/Search.go) и [телеграм бота](https://github.com/github/RB-PRO/etsp/internal/telegram.go), который использует библиотеку [tgbotapi](https://github.com/go-telegram-bot-api/telegram-bot-api/).
+Данная директория отвечает за сам [поиск товаров](https://github.com/github/RB-PRO/etsp/internal/app/Search.go) и [телеграм бота](https://github.com/github/RB-PRO/etsp/internal/app/telegram.go), который использует библиотеку [tgbotapi](https://github.com/go-telegram-bot-api/telegram-bot-api/).
 
 ### *pkg*
 

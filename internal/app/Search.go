@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -49,6 +50,12 @@ func Run(SearchArray []string) error {
 	}
 	time.Sleep(100 * time.Microsecond)
 
+	manuf, errorManuf := user.ManufacturerList()
+	if errorManuf != nil {
+		return errorManuf
+	}
+	fmt.Println(manuf)
+	fmt.Printf("%+#v", manuf)
 	// ************************************************
 	var count int = 2
 

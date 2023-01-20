@@ -50,8 +50,8 @@ type GetPartsRemainsByCodeResponse struct {
 			StorageName                       string  `json:"StorageName"`                       // Название склада
 			StoragePosition                   int     `json:"StoragePosition"`                   // Позиция склада (для сортировки)
 			Weight                            float64 `json:"Weight"`                            // Вес (кг.)
+			ManufacturerNumber                string  `json:"ManufacturerNumber"`                // Номер производителя (только по отдельному доступу*)
 
-			//ManufacturerNumber                string      `json:"ManufacturerNumber"`                // Номер производителя (только по отдельному доступу*)
 			//PriceCost                         interface{} `json:"PriceCost"`                         // Цена себестоимости (только по отдельному доступу*)
 			//PricePurchasing                   interface{} `json:"PricePurchasing"`                   // Цена закупки (только по отдельному доступу*)
 			//PriceRetail                       interface{} `json:"PriceRetail"`                       // Цена розничная (только по отдельному доступу*)

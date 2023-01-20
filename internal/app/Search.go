@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -12,7 +11,7 @@ import (
 
 func RunForArray() {
 	SearchArray := make([]string, 2)
-	SearchArray[0] = "1261-2919010"
+	SearchArray[0] = "1261" // 1261-2919010
 	SearchArray[1] = "1262-2919010"
 	errorSearch := Run(SearchArray)
 	if errorSearch != nil {
@@ -50,12 +49,12 @@ func Run(SearchArray []string) error {
 	}
 	time.Sleep(100 * time.Microsecond)
 
-	manuf, errorManuf := user.ManufacturerList()
-	if errorManuf != nil {
-		return errorManuf
-	}
-	fmt.Println(manuf)
-	fmt.Printf("%+#v", manuf)
+	//manuf, errorManuf := user.ManufacturerList()
+	//if errorManuf != nil {
+	//	return errorManuf
+	//}
+	//fmt.Println(manuf)
+	//fmt.Printf("%+#v", manuf)
 	// ************************************************
 	var count int = 2
 
@@ -70,7 +69,7 @@ func Run(SearchArray []string) error {
 
 		if len(SearchBasicRes.Data.Items) != 0 {
 			for indexSearchBasic, valueSearchBasic := range SearchBasicRes.Data.Items {
-				log.Println("Code:", valueSearchBasic.Code)
+				log.Println("Код:", valueSearchBasic.Code)
 
 				// Поиск по коду товара
 				GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(valueSearchBasic.Code) //SearchBasicRes.Data.Items[0].Code)

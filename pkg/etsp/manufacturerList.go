@@ -13,9 +13,9 @@ type ManufacturerList struct {
 	HashSession string `json:"HashSession"` // Хэш-ключ сессии
 }
 
-// Структура ответа на метод простого поска [SearchBasic]
+// Структура ответа на метод простого поска [ManufacturerList]
 //
-// [SearchBasic]: https://ws.etsp.ru/Help/v2/Search/SearchBasic.aspx
+// [ManufacturerList]: https://ws.etsp.ru/Help/v2/Search/ManufacturerList.aspx
 type ManufacturerListResponse struct {
 	Errors   []string `json:"Errors"`
 	Success  bool     `json:"Success"`

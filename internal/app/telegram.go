@@ -38,7 +38,7 @@ func StartBot() {
 			if errorSearch != nil {
 				//log.Fatal(errorSearch)
 				fmt.Println(errorSearch, update.Message.Chat.UserName)
-				bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Ошибка. Повторите запрос."))
+				bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Ошибка. "+errorSearch.Error()))
 			} else {
 
 				log.Println("Done", update.Message.Chat.UserName)

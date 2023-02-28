@@ -2,22 +2,12 @@ package app
 
 import (
 	"io"
-	"log"
 	"os"
 	"time"
 
 	"github.com/RB-PRO/etsp/pkg/etsp"
+	"github.com/cheggaaa/pb"
 )
-
-func RunForArray() {
-	SearchArray := make([]string, 2)
-	SearchArray[0] = "1261" // 1261-2919010
-	SearchArray[1] = "1262-2919010"
-	errorSearch := Run(SearchArray)
-	if errorSearch != nil {
-		log.Fatal(errorSearch)
-	}
-}
 
 func Run(SearchArray []string) error {
 	fileOut, errorMakeXlsx := etsp.MakeWorkBook()
@@ -59,40 +49,43 @@ func Run(SearchArray []string) error {
 	var count int = 2
 
 	// Проходим по исходному массиву
+	bar := pb.StartNew(len(SearchArray))
+	defer bar.Finish()
 	for _, SearchArrayVal := range SearchArray {
+		bar.Prefix(SearchArrayVal)
+		bar.Increment()
 		// Простой поиск
 		SearchBasicRes, SearchBasicError := user.SearchBasic(SearchArrayVal)
 		if SearchBasicError != nil {
+			//log.Println(SearchBasicError)
 			return SearchBasicError
 		}
 		time.Sleep(100 * time.Microsecond)
 
 		if len(SearchBasicRes.Data.Items) != 0 {
 			for indexSearchBasic, valueSearchBasic := range SearchBasicRes.Data.Items {
-				log.Println("Код:", valueSearchBasic.Code)
+				//log.Println("Код:", valueSearchBasic.Code)
 
 				// Поиск по коду товара
 				GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(valueSearchBasic.Code) //SearchBasicRes.Data.Items[0].Code)
 				if GetPartsRemainsByCodeError != nil {
+					//log.Println(GetPartsRemainsByCodeError)
 					return GetPartsRemainsByCodeError
 				}
 
 				if len(GetPartsRemainsByCodeRes.Data.Remains) != 0 {
 					for indexGetPartsRemainsByCode, valueGetPartsRemainsByCode := range GetPartsRemainsByCodeRes.Data.Remains {
-
 						if valueGetPartsRemainsByCode.StorageName == "Хабаровск" { // проверка на Хабаровск
-
 							etsp.WriteOneLineCustom(fileOut, "main", count, SearchBasicRes, indexSearchBasic, GetPartsRemainsByCodeRes, indexGetPartsRemainsByCode)
 							count++
-
 						}
 					}
 				}
-
 				time.Sleep(50 * time.Microsecond)
 			}
 		}
 	}
+
 	// ************************************************
 
 	// Деавторизация

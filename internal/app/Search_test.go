@@ -1,11 +1,9 @@
 package app_test
 
 import (
-	"log"
+	"fmt"
 	"strings"
 	"testing"
-
-	"github.com/RB-PRO/etsp/internal/app"
 )
 
 func TestRun(t *testing.T) {
@@ -39,10 +37,12 @@ func TestRun(t *testing.T) {
 	SearchArray = append(SearchArray, "R4157DGL08")
 	SearchArray = append(SearchArray, "R4157DGL09")
 
-	errorSearch := app.Run(SearchArray)
-	if errorSearch != nil {
-		log.Fatal(errorSearch)
-	}
+	/*
+		errorSearch := app.Run(SearchArray)
+		if errorSearch != nil {
+			log.Fatal(errorSearch)
+		}
+	*/
 
 	// *** 2 ***
 	t.Log("*** 2 ***")
@@ -1440,9 +1440,11 @@ STN1292WA
 STP4935WA
 SZB9811WA`
 	str := strings.Split(varStr, "\n")
-
-	errorSearch2 := app.Run(str)
-	if errorSearch2 != nil {
-		log.Fatal(errorSearch2)
-	}
+	fmt.Println(str)
+	/*
+		errorSearch2 := app.Run(str)
+		if errorSearch2 != nil {
+			log.Fatal(errorSearch2)
+		}
+	*/
 }

@@ -2,6 +2,7 @@ package app
 
 import (
 	"io"
+	"log"
 	"os"
 	"time"
 
@@ -9,35 +10,12 @@ import (
 	"github.com/cheggaaa/pb"
 )
 
-func Run(SearchArray []string) error {
+func Run(user etsp.User, SearchArray []string) ([]string, []string, error) {
 	fileOut, errorMakeXlsx := etsp.MakeWorkBook()
 	if errorMakeXlsx != nil {
-		return errorMakeXlsx
+		return nil, nil, errorMakeXlsx
 	}
 	etsp.WriteHeadCustom(fileOut, "main")
-
-	// Получение логина и пароля из файлов
-	login, ErrorFile := dataFile("Login")
-	if ErrorFile != nil {
-		return ErrorFile
-	}
-	password, ErrorFile := dataFile("Password")
-	if ErrorFile != nil {
-		return ErrorFile
-	}
-
-	// Объявление пользователя
-	user := etsp.User{
-		Login:    login,
-		Password: password,
-	}
-
-	// Авторизация
-	_, errorAuf := user.Logon()
-	if errorAuf != nil {
-		return errorAuf
-	}
-	time.Sleep(100 * time.Microsecond)
 
 	//manuf, errorManuf := user.ManufacturerList()
 	//if errorManuf != nil {
@@ -47,6 +25,8 @@ func Run(SearchArray []string) error {
 	//fmt.Printf("%+#v", manuf)
 	// ************************************************
 	var count int = 2
+	var errorsNumbers []string
+	var errorsStrs []string
 
 	// Проходим по исходному массиву
 	bar := pb.StartNew(len(SearchArray))
@@ -58,9 +38,17 @@ func Run(SearchArray []string) error {
 		SearchBasicRes, SearchBasicError := user.SearchBasic(SearchArrayVal)
 		if SearchBasicError != nil {
 			//log.Println(SearchBasicError)
-			return SearchBasicError
+			errorsNumbers = append(errorsNumbers, SearchArrayVal)
+			errorsStrs = append(errorsStrs, SearchBasicError.Error())
+			log.Println("Error 1:", SearchArrayVal, SearchBasicError)
+			continue
+			if SearchBasicError.Error() == "Не найден аккаунт пользователя" {
+
+			}
+			//goto End
+			//return SearchBasicError
 		}
-		time.Sleep(100 * time.Microsecond)
+		time.Sleep(300 * time.Microsecond)
 
 		if len(SearchBasicRes.Data.Items) != 0 {
 			for indexSearchBasic, valueSearchBasic := range SearchBasicRes.Data.Items {
@@ -70,7 +58,13 @@ func Run(SearchArray []string) error {
 				GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(valueSearchBasic.Code) //SearchBasicRes.Data.Items[0].Code)
 				if GetPartsRemainsByCodeError != nil {
 					//log.Println(GetPartsRemainsByCodeError)
-					return GetPartsRemainsByCodeError
+
+					log.Println("Error 2:", SearchArrayVal, GetPartsRemainsByCodeError)
+					if GetPartsRemainsByCodeError.Error() == "Не найден аккаунт пользователя" {
+
+					}
+					//goto End
+					//return GetPartsRemainsByCodeError
 				}
 
 				if len(GetPartsRemainsByCodeRes.Data.Remains) != 0 {
@@ -81,7 +75,7 @@ func Run(SearchArray []string) error {
 						}
 					}
 				}
-				time.Sleep(50 * time.Microsecond)
+				time.Sleep(300 * time.Microsecond)
 			}
 		}
 	}
@@ -91,16 +85,16 @@ func Run(SearchArray []string) error {
 	// Деавторизация
 	_, errorLogout := user.Logout()
 	if errorLogout != nil {
-		return errorLogout
+		return nil, nil, errorLogout
 	}
 
 	// ************************************************ EXCEL SAVE ************************************************
 	fileCloseError := etsp.CloseXlsx(fileOut)
 	//etsp.Filter(fileOut, "main")
 	if fileCloseError != nil {
-		return fileCloseError
+		return nil, nil, fileCloseError
 	}
-	return nil
+	return errorsNumbers, errorsStrs, nil
 }
 
 // Получение значение из файла

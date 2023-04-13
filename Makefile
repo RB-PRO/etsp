@@ -32,8 +32,17 @@ build-windows:
 	go build cmd/Georgy/main.go
 
 go-car:
+	export GOARCH=amd64
+	export GOOS=linux
+	export CGO_ENABLED=0
+	go env GOOS GOARCH CGO_ENABLED
+	go build -o main ./cmd/Georgy/main.go
+	scp main Login Password Token root@194.87.107.129:go/etsp/
+
+go-carW:
 	set GOARCH=amd64
 	set GOOS=linux
-	go env GOOS GOARCH
+	set CGO_ENABLED=0
+	go env GOOS GOARCH CGO_ENABLED
 	go build -o main ./cmd/Georgy/main.go
 	scp main Login Password Token root@194.87.107.129:go/etsp/

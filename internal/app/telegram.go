@@ -42,20 +42,20 @@ func StartBot() {
 		Password: password,
 	}
 
-	// Авторизация
-	_, errorAuf := user.Logon()
-	if errorAuf != nil {
-		log.Fatalln(errorAuf)
-	}
-	time.Sleep(100 * time.Microsecond)
-	// *************************************
-
 	for update := range updates {
 		if update.Message == nil { // ignore any non-Message updates
 			continue
 		}
 
 		if !update.Message.IsCommand() { // ignore any non-command Messages
+
+			_, errorAuf := user.Logon() // Авторизация
+			if errorAuf != nil {
+				//log.Fatalln(errorAuf)
+				bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, errorAuf.Error()))
+				bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Попробуйте повторить запрос."))
+			}
+			time.Sleep(100 * time.Microsecond)
 
 			// Непосредственная обработка
 
@@ -82,6 +82,8 @@ func StartBot() {
 
 			bot.Send(tgbotapi.NewDocument(update.Message.Chat.ID, file))
 			//bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Вот Ваш файл"))
+
+			user.Logout()
 			continue
 
 		}

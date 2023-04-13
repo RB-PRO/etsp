@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -67,7 +66,7 @@ func (user User) SearchBasic(text string) (SearchBasicResponse, error) {
 		return SearchBasicResponse{}, err
 	}
 
-	fmt.Println(string(body))
+	//fmt.Println(string(body))
 
 	// Распарсить данные
 	var SearchBasicRes SearchBasicResponse

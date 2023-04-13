@@ -42,11 +42,6 @@ func Run(user etsp.User, SearchArray []string) ([]string, []string, error) {
 			errorsStrs = append(errorsStrs, SearchBasicError.Error())
 			log.Println("Error 1:", SearchArrayVal, SearchBasicError)
 			continue
-			if SearchBasicError.Error() == "Не найден аккаунт пользователя" {
-
-			}
-			//goto End
-			//return SearchBasicError
 		}
 		time.Sleep(300 * time.Microsecond)
 
@@ -57,14 +52,7 @@ func Run(user etsp.User, SearchArray []string) ([]string, []string, error) {
 				// Поиск по коду товара
 				GetPartsRemainsByCodeRes, GetPartsRemainsByCodeError := user.GetPartsRemainsByCode(valueSearchBasic.Code) //SearchBasicRes.Data.Items[0].Code)
 				if GetPartsRemainsByCodeError != nil {
-					//log.Println(GetPartsRemainsByCodeError)
-
 					log.Println("Error 2:", SearchArrayVal, GetPartsRemainsByCodeError)
-					if GetPartsRemainsByCodeError.Error() == "Не найден аккаунт пользователя" {
-
-					}
-					//goto End
-					//return GetPartsRemainsByCodeError
 				}
 
 				if len(GetPartsRemainsByCodeRes.Data.Remains) != 0 {
